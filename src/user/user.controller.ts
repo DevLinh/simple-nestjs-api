@@ -12,8 +12,8 @@ export class UserController {
   }
 
   @Get('myemail')
-  getMyEmail(@GetUser('email') email: string): string {
-    return email;
+  getMyEmail(@GetUser('email') email: string): Object {
+    return { email: email };
   }
 
   @Patch()

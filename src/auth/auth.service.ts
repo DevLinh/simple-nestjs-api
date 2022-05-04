@@ -60,7 +60,7 @@ export class AuthService {
       throw new ForbiddenException('Credentials Incorrect');
     }
     //success
-    return { mg: 'Success', dto };
+    return this.signToken(user.id, user.email);
   }
 
   async signToken(

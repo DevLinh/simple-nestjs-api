@@ -5,8 +5,15 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BookbarkModule } from './bookbark/bookbark.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AuthModule, UserModule, BookbarkModule, PrismaModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    BookbarkModule,
+    PrismaModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+  ],
 })
 export class AppModule {}

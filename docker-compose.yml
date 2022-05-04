@@ -10,5 +10,15 @@ services:
       POSTGRESDB: nest
     networks:
       - cmc
+  test-db:
+    image: postgres:13
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRESDB: nest
+    networks:
+      - cmc
 networks:
   cmc:

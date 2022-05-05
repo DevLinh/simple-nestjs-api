@@ -1,5 +1,13 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 export enum OrderStatus {
   'Ready' = 1,
@@ -15,22 +23,29 @@ export class OrderItem {
 
   @Type(() => Number)
   @IsNumber()
-  product: number;
+  productId: number;
 
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  order: number;
+  orderId: number;
 }
 
 export class CreateOrderDto {
   @IsString()
   status: string;
 
-  @Type(() => Array)
-  // @IsArray()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OrderItem)
+  @ArrayMinSize(1)
   orderItems: OrderItem[];
+
+  // @IsArray()
+  // @Type(() => Number)
+  // items: number[];
 
   @Type(() => Number)
   @IsNumber()
-  customer: number;
+  orderBy: number;
 }

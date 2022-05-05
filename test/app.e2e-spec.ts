@@ -30,6 +30,18 @@ describe('AppController (e2e)', () => {
 
     prisma = app.get(PrismaService);
     await prisma.cleanDb();
+
+    //create sample products
+    await prisma.product.createMany({
+      data: [
+        {
+          name: 'TV',
+          price: 1200,
+          originalPrice: 1100,
+        },
+        { name: 'Xbox', price: 1500, originalPrice: 1200 },
+      ],
+    });
   });
 
   afterAll(() => {
@@ -138,6 +150,26 @@ describe('AppController (e2e)', () => {
 
     describe('Edit user', () => {
       it.todo('Edit user');
+    });
+  });
+
+  describe('Order', () => {
+    it('create order', async () => {
+      const ex = {
+        status: 'Ready',
+        orderBy: 1,
+        orderItems: [
+          { quantity: 1, product: 2 },
+          { quantity: 1, product: 1 },
+        ],
+      };
+
+      const { status, body } = await request(app.getHttpServer())
+        .post('/order/create')
+        .send(ex);
+
+      console.log(body);
+      expect(status).toBe(201);
     });
   });
 

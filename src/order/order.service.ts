@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateOrderDto, OrderItem } from './dto/create-order.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
@@ -8,10 +8,18 @@ export class OrderService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateOrderDto) {
-    const order = await this.prisma.order.create({ data: dto });
-    dto.orderItems.forEach((orderItem: OrderItem) => {
-      orderItem.order = order.id;
-      this.prisma.orderItem.create({ data: orderItem });
+    const order = await this.prisma.order.create({
+      data: { orderBy: dto.orderBy, status: dto.status },
+    });
+    console.log(dto);
+    dto.orderItems.forEach(async (orderItem) => {
+      await this.prisma.orderItem.create({
+        data: {
+          productId: orderItem.productId,
+          quantity: orderItem.quantity,
+          orderId: order.id,
+        },
+      });
     });
     return order;
   }

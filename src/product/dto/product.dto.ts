@@ -2,10 +2,6 @@ import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class ProductDto {
-  @IsOptional()
-  @IsNumber()
-  productid: number;
-
   @IsNumber()
   @Min(1000)
   @Type(() => Number)

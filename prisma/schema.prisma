@@ -20,19 +20,45 @@ model User {
   email     String   @unique
   hash      String
 
+  orders Order[]
+
   @@map("users")
-  bookbarks Bookmark[]
 }
 
 model Product {
+  id            Int      @id @default(autoincrement())
+  createAt      DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String
+  price         Int
+  originalPrice Int
+  discountRate  Float?
+  category      Int @default(1)
+
+  orderItems OrderItem[]
+}
+
+model Order {
   id        Int      @id @default(autoincrement())
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name String
-  price  Int
-  originalPrice Int
-  discountRate Float?
-  
+  status    String
+
+  orderItems OrderItem[]
+
+  orderBy  Int
+  customer User @relation(fields: [orderBy], references: [id])
+  @@map("orders")
+}
+
+model OrderItem {
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  quantity  Int
+
+  @@id([productId, orderId])
 }
 
 model Bookmark {
@@ -45,6 +71,6 @@ model Bookmark {
   link        String
 
   userId Int
-  user   User @relation(fields: [userId], references: [id])
-  @@map("bookmarks")
+  // user   User @relation(fields: [userId], references: [id])
+  // @@map("bookmarks")
 }

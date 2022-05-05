@@ -10,14 +10,14 @@ describe('AppController (e2e)', () => {
   let prisma: PrismaService;
   let access_token: string;
 
-  const responseUserShape = expect.objectContaining({
-    id: expect.any(Number),
-    createAt: expect.any(Date),
-    updateAt: expect.any(Date),
-    firstName: expect.any(String) | expect.any(null),
-    lastName: expect.any(String) | expect.any(null),
-    email: expect.any(String),
-  });
+  // const responseUserShape = expect.objectContaining({
+  //   id: expect.any(Number),
+  //   createAt: expect.any(String),
+  //   updateAt: expect.any(String),
+  //   firstName: expect.any(String) | expect.any(null),
+  //   lastName: expect.any(String) | expect.any(null),
+  //   email: expect.any(String),
+  // });
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -43,7 +43,7 @@ describe('AppController (e2e)', () => {
     };
     describe('Signup', () => {
       it('should signup success', async () => {
-        const { status, body } = await request(app.getHttpServer())
+        const { status } = await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
             email: dto.email,
@@ -51,6 +51,55 @@ describe('AppController (e2e)', () => {
           });
         expect(status).toBe(201);
         // expect(body.user).toStrictEqual(responseUserShape);
+      });
+
+      it('should require information', async () => {
+        const { status, body } = await request(app.getHttpServer()).post(
+          '/auth/signup',
+        );
+        expect(status).toBe(400);
+        expect(body).toStrictEqual({
+          statusCode: 400,
+          message: [
+            'email should not be empty',
+            'email must be an email',
+            'password should not be empty',
+            'password must be a string',
+          ],
+          error: 'Bad Request',
+        });
+      });
+
+      it('should require email in the right format', async () => {
+        const { status, body } = await request(app.getHttpServer())
+          .post('/auth/signup')
+          .send({
+            email: 'not an email',
+            password: dto.password,
+          });
+        expect(status).toBe(400);
+        expect(body).toStrictEqual({
+          statusCode: 400,
+          message: ['email must be an email'],
+          error: 'Bad Request',
+        });
+      });
+
+      it('should require password', async () => {
+        const { status, body } = await request(app.getHttpServer())
+          .post('/auth/signup')
+          .send({
+            email: dto.email,
+          });
+        expect(status).toBe(400);
+        expect(body).toStrictEqual({
+          statusCode: 400,
+          message: [
+            'password should not be empty',
+            'password must be a string',
+          ],
+          error: 'Bad Request',
+        });
       });
     });
 
@@ -77,22 +126,40 @@ describe('AppController (e2e)', () => {
         console.log(body);
         expect(status).toBe(200);
       });
+
+      it('should get my user info', async () => {
+        const { status, body } = await request(app.getHttpServer())
+          .get('/users/me')
+          .set({ Authorization: `Bearer ${access_token}` });
+        console.log(body);
+        expect(status).toBe(200);
+      });
     });
 
-    describe('Edit user', () => {});
+    describe('Edit user', () => {
+      it.todo('Edit user');
+    });
   });
 
   describe('Bookmarks', () => {
-    describe('Get empty bookmarks', () => {});
+    describe('Get empty bookmarks', () => {
+      it.todo('Edit user');
+    });
 
-    describe('Create bookmark', () => {});
+    describe('Create bookmark', () => {
+      it.todo('Create bookmark');
+    });
 
-    describe('Get bookmarks', () => {});
+    describe('Get bookmarks', () => {
+      it.todo('Get bookmarks');
+    });
 
-    describe('Edit bookmark by id', () => {});
+    describe('Edit bookmark by id', () => {
+      it.todo('Edit bookmark by id');
+    });
 
-    describe('Delete bookmark by id', () => {});
+    describe('Delete bookmark by id', () => {
+      it.todo('Delete bookmark by id');
+    });
   });
-
-  it.todo('get ready');
 });

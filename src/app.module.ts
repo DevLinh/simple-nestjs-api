@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { BookbarkModule } from './bookbark/bookbark.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     BookbarkModule,
     PrismaModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    ProductModule,
   ],
 })
 export class AppModule {}

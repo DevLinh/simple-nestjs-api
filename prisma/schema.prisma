@@ -24,6 +24,17 @@ model User {
   bookbarks Bookmark[]
 }
 
+model Product {
+  id        Int      @id @default(autoincrement())
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  price  Int
+  originalPrice Int
+  discountRate Float?
+  
+}
+
 model Bookmark {
   id        Int      @id @default(autoincrement())
   createAt  DateTime @default(now())

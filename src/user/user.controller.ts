@@ -12,7 +12,7 @@ export class UserController {
   }
 
   @Get('myemail')
-  getMyEmail(@GetUser('email') email: string): Object {
+  getMyEmail(@GetUser('email') email: string) {
     return { email: email };
   }
 

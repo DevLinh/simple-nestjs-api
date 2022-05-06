@@ -60,17 +60,3 @@ model OrderItem {
 
   @@id([productId, orderId])
 }
-
-model Bookmark {
-  id        Int      @id @default(autoincrement())
-  createAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  title       String
-  description String?
-  link        String
-
-  userId Int
-  // user   User @relation(fields: [userId], references: [id])
-  // @@map("bookmarks")
-}

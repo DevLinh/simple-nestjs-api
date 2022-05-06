@@ -2,7 +2,6 @@ import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -41,10 +40,7 @@ export class CreateOrderDto {
   @ArrayMinSize(1)
   orderItems: OrderItem[];
 
-  // @IsArray()
-  // @Type(() => Number)
-  // items: number[];
-
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   orderBy: number;

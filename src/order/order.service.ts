@@ -7,19 +7,18 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 export class OrderService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateOrderDto) {
+  async create(dto: CreateOrderDto, orderBy: number) {
     const order = await this.prisma.order.create({
-      data: { orderBy: dto.orderBy, status: dto.status },
-    });
-    console.log(dto);
-    dto.orderItems.forEach(async (orderItem) => {
-      await this.prisma.orderItem.create({
-        data: {
-          productId: orderItem.productId,
-          quantity: orderItem.quantity,
-          orderId: order.id,
+      data: {
+        orderBy: orderBy,
+        status: dto.status,
+        orderItems: {
+          createMany: { data: [...dto.orderItems] },
         },
-      });
+      },
+      include: {
+        orderItems: true,
+      },
     });
     return order;
   }
@@ -28,26 +27,48 @@ export class OrderService {
     return this.prisma.order.findMany();
   }
 
+  async filter(conditions: any) {
+    const orders = await this.prisma.order.findMany({
+      where: {
+        ...conditions,
+      },
+      include: {
+        orderItems: true,
+      },
+    });
+    return orders;
+  }
+
   async findOne(id: number) {
     const order = await this.prisma.order.findUnique({
       where: {
         id: id,
       },
+      include: {
+        orderItems: true,
+      },
     });
-    const orderItems = await this.prisma.orderItem.findMany({
+
+    return order;
+  }
+
+  update(id: number, updateOrderDto: UpdateOrderDto) {
+    return this.prisma.order.update({
+      where: { id: id },
+      data: { ...updateOrderDto },
+    });
+  }
+
+  async remove(id: number) {
+    await this.prisma.orderItem.deleteMany({
       where: {
         orderId: id,
       },
     });
-
-    return { ...order, orderItems };
-  }
-
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+    await this.prisma.order.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }

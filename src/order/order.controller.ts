@@ -14,9 +14,9 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { JwtGuard } from '../auth/guard';
+import { JwtGuard, RolesGuard } from '../auth/guard';
 import { GetUser, Roles } from '../auth/decorator';
-import { Role } from 'src/auth/enum/role.enum';
+import { Role } from '../auth/enum/role.enum';
 
 @UseGuards(JwtGuard)
 @Controller('order')
@@ -57,6 +57,7 @@ export class OrderController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.orderService.remove(id);

@@ -13,13 +13,16 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductDto, UpdateProductDto } from './dto';
-import { JwtGuard } from '../auth/guard';
+import { JwtGuard, RolesGuard } from '../auth/guard';
+import { Roles } from '../auth/decorator';
+import { Role } from 'src/auth/enum/role.enum';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post('create')
   create(@Body() dto: ProductDto) {
     console.log({ dto });

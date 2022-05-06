@@ -7,6 +7,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
+import { RolesGuard } from './auth/guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -16,6 +18,12 @@ import { OrderModule } from './order/order.module';
     ConfigModule.forRoot({ isGlobal: true }),
     ProductModule,
     OrderModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule {}

@@ -156,16 +156,17 @@ describe('AppController (e2e)', () => {
   describe('Order', () => {
     it('create order', async () => {
       const ex = {
-        status: 'Ready',
+        status: 'Testing',
         orderBy: 1,
         orderItems: [
-          { quantity: 1, product: 2 },
-          { quantity: 1, product: 1 },
+          { quantity: 1, productId: 2 },
+          { quantity: 1, productId: 1 },
         ],
       };
 
       const { status, body } = await request(app.getHttpServer())
         .post('/order/create')
+        .set({ Authorization: `Bearer ${access_token}` })
         .send(ex);
 
       console.log(body);

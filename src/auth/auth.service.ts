@@ -6,6 +6,7 @@ import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from 'src/user/dto';
 @Injectable({})
 export class AuthService {
   constructor(
@@ -13,7 +14,7 @@ export class AuthService {
     private config: ConfigService,
     private jwt: JwtService,
   ) {}
-  async signup(dto: AuthDto) {
+  async signup(dto: CreateUserDto) {
     //generate the password hash
     const hash = await argon.hash(dto.password);
     // save the new user in the db
@@ -21,6 +22,9 @@ export class AuthService {
       const user = await this.prisma.user.create({
         data: {
           email: dto.email,
+          lastName: dto.lastName,
+          firstName: dto.firstName,
+          roles: dto.roles || ['User'],
           hash,
         },
       });
